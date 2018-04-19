@@ -5,20 +5,20 @@
             <div class="simpleBorder">
                 <img id="aboutMePic" class="about" src="static/images/FixToProfile.jpg" alt="Profile Picture">
             </div>
-            <p v-on:click="editPic()" class="editFile">edit</p>
+            <p v-on:click="editPic()" v-bind:class="{editFile: login, noEdit: !login}">edit</p>
                 
         </aside>
         <article>
             <div id="loginRequired" class="title">Get to Know Me</div>
             <div id="aboutMe">
-                <div v-if="status == false">
-                    <p  id="aboutMeWords">{{ currentMessage }}</p>
-                    <p v-on:click="editWords()" class="editFile">edit</p>
+                <div v-if="editing == false">
+                    <p  id="aboutMeWords">{{ message() }}</p>
+                    <p v-on:click="editWords()" v-bind:class="{editFile: login, noEdit: !login}">edit</p>
                 </div>
-                <div id="gimmeSpace" v-if="status == true">
+                <div id="gimmeSpace" v-if="editing == true">
                     <textarea id="aboutMeEdit" v-model="currentMessage"></textarea>
                     <div class="formLabels">
-                        <input type="button" value="Submit" v-on:click="submit(currentMessage)">
+                        <input type="button" value="Submit" v-on:click="submit()">
                     </div>
                 </div>
             </div>
@@ -34,36 +34,47 @@ export default {
     name: 'About',
   data () {
     return {
-        currentMessage:'Please edit this and add a bio.',
         editing: false,
+        loginStatus: false,
+        currentMessage:"",
     }
+  },
+  created: function(){
+    this.$store.dispatch('getBio');
   },
   methods:{
     editWords: function(){
+        //sent an api to save this and the picture into the database
+        //replace what is there in the current user
         this.editing = true;
     },
-    submit: function(words){
+    submit: function(){
+        console.log(this.currentMessage);
+        
         this.editing = false;
-        this.currentMessage = words;
+        let tempUser = this.$store.getters.user;
+        tempUser.aboutMe = this.currentMessage;
+        this.$store.dispatch('editBio', tempUser);
     },
     editPic: function(){
         return;
-    }
+    },
+    message: function(){
+        this.currentMessage = this.$store.getters.aboutMe;
+        return this.$store.getters.aboutMe;
+    },
 
   },
   computed: {
-    loggedIn: function() {
-        console.log(this.$store.getters.loggedIn);
-          if(this.$store.getters.loggedIn == true){
-              document.getElementsByClassName('editFile').setAttribute("style", 'display: block');
-          }
-          else 
-              document.getElementsByClassName('editFile').setAttribute("style", 'display: none');
-      },
+    
+    login: function(){
+        this.loginStatus = this.$store.getters.logedIn;
+        return this.loginStatus;
+     },
+    
     status: function() {
-        console.log(this.editing);
-    return this.editing;
-    },
+        return this.editing;
+     },
   },
 }
 </script>
@@ -108,9 +119,11 @@ article{
     font-size: 32px;
 }
 
-
-.editFile{
+.noEdit{
     display: none;
+}
+.editFile{
+    display: block;
     padding: 2px;
     background-color: rgba(0, 0, 0, 0.15);
     border: 2px inset rgba(0, 0, 0, 0.2);
@@ -125,7 +138,7 @@ input[type="file"]#editFile {
 }
 
 #aboutMeWords {
-    width: 100%;
+    max-width: 1000px;
     font-family: fantasy;
     font-size: 14px;
 }

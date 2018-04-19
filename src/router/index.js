@@ -4,6 +4,7 @@ import HelloWorld from '@/components/HelloWorld'
 import Portfolio from '@/components/Portfolio'
 import About from '@/components/About'
 import Login from '@/components/Login'
+import Upload from '@/components/Upload'
 
 Vue.use(Router)
 
@@ -28,6 +29,11 @@ export default new Router({
       path: '/Login',
       name: 'Login',
       component: Login,
+    },
+    {
+      path: '/Upload',
+      name: 'Upload',
+      component: Upload,
     },
   ]
 })

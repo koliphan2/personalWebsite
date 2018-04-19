@@ -1,98 +1,13 @@
 <template>
     <div>               
         <div class="image-grid">
-            <div class="pictureClass">
-                Drawings
+            <div class="pictureClass" v-for="item in pictures">
+                <h3>{{item.title}}</h3>
                 <div class="pictures">
-                    <div class="singlePicture">
-                            <p id="notes">Extra notes about the piece</p>
-                            <img src="photos/stormFrog.jpg" alt="sampleImg">
-                            <p id="title">title</p>
-                    </div>
-                    <div class="singlePicture">
-                            <p id="notes">Extra notes about the piece</p>
-                            <img src="photos/stormFrog.jpg" alt="sampleImg">
-                            <p id="title">title</p>
-                    </div>
-                    <div class="singlePicture">
-                            <p id="notes">Extra notes about the piece</p>
-                            <img src="photos/stormFrog.jpg" alt="sampleImg">
-                            <p id="title">title</p>
-                    </div>
-                    <div class="singlePicture">
-                            <p id="notes">Extra notes about the piece</p>
-                            <img src="photos/stormFrog.jpg" alt="sampleImg">
-                            <p id="title">title</p>
-                    </div>
-                </div>
-            </div>
-            <div class="pictureClass">
-                Digital Work
-                <div class="pictures">
-                    <div class="singlePicture">
-                            <p id="notes">Extra notes about the piece</p>
-                            <img src="photos/stormFrog.jpg" alt="sampleImg">
-                            <p id="title">title</p>
-                    </div>
-                    <div class="singlePicture">
-                            <p id="notes">Extra notes about the piece</p>
-                            <img src="photos/stormFrog.jpg" alt="sampleImg">
-                            <p id="title">title</p>
-                    </div>
-                </div>
-            </div>
-            <div class="pictureClass">
-                Master Copies
-                <div class="pictures">
-                    <div class="singlePicture">
-                            <p id="notes">Extra notes about the piece</p>
-                            <img src="photos/stormFrog.jpg" alt="sampleImg">
-                            <p id="title">title</p>
-                    </div>
-                    <div class="singlePicture">
-                            <p id="notes">Extra notes about the piece</p>
-                            <img src="photos/stormFrog.jpg" alt="sampleImg">
-                            <p id="title">title</p>
-                    </div>
-                    <div class="singlePicture">
-                            <p id="notes">Extra notes about the piece</p>
-                            <img src="photos/stormFrog.jpg" alt="sampleImg">
-                            <p id="title">title</p>
-                    </div>
-                </div>
-            </div>
-            <div class="pictureClass">
-                Paintings
-                <div class="pictures">
-                    <div class="singlePicture">
-                            <p id="notes">Extra notes about the piece</p>
-                            <img src="photos/stormFrog.jpg" alt="sampleImg">
-                            <p id="title">title</p>
-                    </div>
-                    <div class="singlePicture">
-                            <p id="notes">Extra notes about the piece</p>
-                            <img src="photos/stormFrog.jpg" alt="sampleImg">
-                            <p id="title">title</p>
-                    </div>
-                    <div class="singlePicture">
-                            <p id="notes">Extra notes about the piece</p>
-                            <img src="photos/stormFrog.jpg" alt="sampleImg">
-                            <p id="title">title</p>
-                    </div>
-                    <div class="singlePicture">
-                            <p id="notes">Extra notes about the piece</p>
-                            <img src="photos/stormFrog.jpg" alt="sampleImg">
-                            <p id="title">title</p>
-                    </div>
-                    <div class="singlePicture">
-                            <p id="notes">Extra notes about the piece</p>
-                            <img src="photos/stormFrog.jpg" alt="sampleImg">
-                            <p id="title">title</p>
-                    </div>
-                    <div class="singlePicture">
-                            <p id="notes">Extra notes about the piece</p>
-                            <img src="photos/stormFrog.jpg" alt="sampleImg">
-                            <p id="title">title</p>
+                    <div class="singlePicture" v-for="picture in item.images">
+                        <p id="notes"> {{picture.description}}</p>
+                        <img v-bind:src="picture.image" alt="sampleImg">
+                        <p id="title">{{picture.title}}</p>
                     </div>
                 </div>
             </div>
@@ -109,9 +24,19 @@ export default {
   name: 'Portfolio',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
-    }
-  }
+        pictures: [],
+        locations:['drawing', 'painting','digital']
+    }   
+  },
+  created: function() {
+    this.$store.dispatch('clearPage');
+    //Set up the arrays
+    this.$store.dispatch('getPictures', this.locations);
+    this.pictures = this.$store.getters.pictures;
+
+    //Add upload date to image table and display it in the description
+    
+  },    
 }
 </script>
 
@@ -162,7 +87,7 @@ export default {
     display: grid;
     margin: 20px;
     grid-gap: 10px;
-    grid-template-rows: auto auto auto auto;
+    grid-template-rows: 25 25 25 25;
 }
 
 .pictureClass{
@@ -185,6 +110,7 @@ export default {
     position: relative;
     display: inline-block;
     cursor: pointer;
+    height: 300px;;
 
     
 }

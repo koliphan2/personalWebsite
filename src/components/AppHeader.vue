@@ -19,7 +19,7 @@
                         </li>
                         <li><router-link to="/about">About</router-link></li>
                         <li><router-link to="/contact">Contact</router-link></li>
-                        <li ref="loginRequired" id="loginRequired" ><router-link to="/uploadPic">Upload {{display()}} </router-link></li>
+                        <li v-bind:class="{loggedIn: login, loggedOut: !login}"><router-link to="/Upload">Upload</router-link></li>
                     </ul>
                     </li>
                 </ul>
@@ -32,26 +32,14 @@
      name: 'AppHeader',
      data(){
          return{
-             loginStatus: '',
+             loginStatus: false,
          }
      },
      computed:{
          //Computed function never runs
         login: function(){
-            console.log("COMPUTATION");
              this.loginStatus = this.$store.getters.logedIn;
-             getStatus();
-         },
-     },
-     methods:{
-         display: function(){
-             console.log(this.$refs);
-             if(this.$store.getters.logedIn == true){
-                this.$refs.loginRequired.style.display = "block";
-                 return;
-             }
-             else{
-             }
+             return this.loginStatus;
          },
      }
  }
@@ -59,9 +47,11 @@
 
 <style scoped>
 
-#loginRequired{
+.loggedOut{
     display: none;
-
+}
+.loggedIn{
+    display: block;
 }
 
 #name{
@@ -140,6 +130,14 @@ li .mini-menu{
 
 .dropdown:hover .dropdown-content {
     display: block;
+}
+
+a{
+    text-decoration-line:none;
+    text-decoration-color: black;
+}
+a:visited{
+    text-decoration-color: black
 }
 
 </style>

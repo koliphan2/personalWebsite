@@ -4,7 +4,7 @@
           <div class="quotePic">
               <div class="quoteHolder">
                   <img class="background" src="static/images/SunsetUtahSkinny.jpg" alt="sunset">
-                  <div class="words"><strong>Welcome to my artist website! Feel free to look around, and I hope you enjoy my work.</strong> <br><br>
+                  <div class="words"><strong>Welcome to my online portfolio! Feel free to look around, and I hope you enjoy my work.</strong> <br><br>
                       The creative adult is the child who has survived.
                   <br> <em>-Ursula K. Le Guin</em></div>
               </div>

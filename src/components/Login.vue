@@ -1,7 +1,7 @@
 <template>
-    <div class="login">
+    <div class="mainBody">
                 <p class="words">This page is for authorized personnel only. If you have come to this page on accident, please return to the website by clicking on any of menu options.</p>
-                <div id='loginForm' ref='loginButton'>
+                <div v-bind:class="{login: !status, unseen: status}">
                     <form v-on:submit="login">
                         <div class="formBox">
                             <label for="userName">Username: </label>
@@ -14,11 +14,13 @@
                         <div class="formBox">
                             <input type="submit" value="Login">
                         </div>
+                        <button v-on:click="register">Register - Temporary</button>
+                
                     </form>
                 </div>
-                <button ref="logout" id="logout" v-on:click="logout">Logout {{ changeStatus()}}</button>
-                <p class="words">*Temporary Note - Most actions in boxes surrounded by this border will only been seen by a logged-in user. <br> Also, to return to this page, click on the top-left icon surrounded in this background at anytime. The background will also disappear in the final version*</p>
-
+                <div v-bind:class="{logout: status, unseen: !status}">
+                    <button v-on:click="logout">Logout</button>
+                </div>
             <div class="footer">
                 <a href="https://github.com/koliphan2/personalWebsite">Github Classroom - koliphan2</a>
             </div>
@@ -32,68 +34,73 @@ export default {
     return {
         userName: "",
         password: "",
+        loginStatus: false,
 
     }
   },
   methods:{
     login: function(){
         this.$store.dispatch('login', {
-            userName: this.userName,
+            username: this.userName,
             password: this.password,
         }).then(response => {
-            this.$store.dispatch('getStatus');
         });
 
         this.userName = "";
         this.password = "";
-        //if(this.$store.getters.logedIn === true){this.$router.push('/'); }
         return;
     },
-    changeStatus: function(){
-        console.log("INSIDE CHANGESTATUS");
-        console.log(this.$store.getters.logedIn + " is the status");
-          if(this.$store.getters.logedIn == false){
-              //  CLASS BINDINGS //
-              //this.$refs.logout.style.display = 'none';
-              //this.$refs.loginButton.style.display = 'block';
-          }
-          else if(this.$store.getters.logedIn == true){
-              //console.log(this.$refs);
-              this.$refs.logout.style.display = 'block';
-          }
-      },
-    
     logout: function(){
         this.$store.dispatch('logout');
-        this.$refs.loginButton.setAttribute("style", 'display: block')
-        this.$refs.logout.setAttribute("style", 'display: none')
-        //'reload' the page after pushin it so AppHeader reloads
-        
     },
-  }
+    register: function(){
+        this.$store.dispatch('register', {
+            username: this.userName,
+            password: this.password,
+            email: "test@test.com",
+            aboutMe: "Fill this out with your information",
+            aboutPic: "This can hold a picture",
+        });
+        this.userName = "";
+        this.password = "";
+    }
+  },
+  computed:{
+    status: function(){
+        return this.$store.getters.logedIn;
+
+     },
+   }
 }
 </script>
 
 
 
 <style scoped>
-.login{
+
+.mainBody{
     width: 800px;
     position: relative;
     left: 50%;
     transform: translate(-50%);
+}
+.login{
     margin: 10px;
-    margin-bottom: 280px;
+    margin-bottom: 30px;
     display: block;
 }
 
-#logout{
+.unseen{
+    display: none;
+}
+
+.logout{
     display: block;
+    margin: 10px;
+
     position: relative;
     left: 50%;
     transform: translate(-50%);
-    margin: 10px;
-    display:none;
 }
 
 .words{
